@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cloudy.IA – Infraestrutura de Nuvem Distribuída</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #050505;
+      --bg-alt: #0b0b0f;
+      --accent: #a873ff;
+      --accent-soft: rgba(168, 115, 255, 0.08);
+      --text: #f5f5f5;
+      --muted: #a3a3a3;
+      --card: #111118;
+      --border: #242429;
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.7);
+      --radius-lg: 22px;
+      --radius-pill: 999px;
+      --transition-fast: 0.2s ease-out;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      background: radial-gradient(circle at top, #141414 0, #020202 55%);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Roboto, sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Layout base */
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.92),
+        rgba(0, 0, 0, 0.75),
+        rgba(0, 0, 0, 0)
+      );
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .navbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 0.5rem;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 14px;
+      background: radial-gradient(circle at 15% 15%, #ffffff, #a873ff, #a873ff);
+      box-shadow: 0 0 24px rgba(168, 115, 255, 0.65);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #000;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .brand-name {
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+    }
+
+    .brand-tagline {
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.2rem;
+      align-items: center;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -0.35rem;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), #e8ccff);
+      transition: width var(--transition-fast);
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      padding: 0.45rem 1rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(168, 115, 255, 0.45);
+      background: radial-gradient(
+        circle at top left,
+        rgba(168, 115, 255, 0.25),
+        rgba(0, 0, 0, 0.9)
+      );
+      font-size: 0.75rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 0 16px rgba(168, 115, 255, 0.35);
+    }
+
+    .nav-cta span.icon {
+      font-size: 0.9rem;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 3.5rem 0 3rem;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.2rem 0.9rem;
+      border-radius: var(--radius-pill);
+      background: rgba(168, 115, 255, 0.09);
+      border: 1px solid rgba(168, 115, 255, 0.4);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      margin-bottom: 1.1rem;
+    }
+
+    .hero-title {
+      font-size: clamp(2.4rem, 4vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    .hero-title span.highlight {
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .hero-subtitle {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 34rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .badge {
+      padding: 0.35rem 0.9rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.02);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .badge strong {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1.8rem;
+    }
+
+    .btn-primary {
+      padding: 0.7rem 1.6rem;
+      border-radius: var(--radius-pill);
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--accent), #d9b3ff);
+      color: #111;
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.8);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 22px 55px rgba(0, 0, 0, 0.9);
+    }
+
+    .btn-ghost {
+      padding: 0.7rem 1.2rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--muted);
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      cursor: pointer;
+      transition: background var(--transition-fast), border-color var(--transition-fast),
+        color var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: var(--text);
+      transform: translateY(-1px);
+    }
+
+    .hero-footer-note {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .hero-footer-note span {
+      color: var(--accent);
+    }
+
+    /* Hero visual card */
+    .hero-card {
+      border-radius: 26px;
+      background: radial-gradient(circle at top left, #3a1f6b 0, #050509 42%, #020202 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: var(--shadow-soft);
+      padding: 1.4rem 1.4rem 1.7rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-chip-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-chip {
+      padding: 0.3rem 0.9rem;
+      border-radius: var(--radius-pill);
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(168, 115, 255, 0.4);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--accent);
+    }
+
+    .hero-chip-right {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .hero-chip-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #32d74b;
+      box-shadow: 0 0 16px rgba(50, 215, 75, 0.8);
+    }
+
+    .hero-main-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-main-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-main-sub {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 1.1rem;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.9rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .metric {
+      padding: 0.65rem 0.7rem;
+      border-radius: 16px;
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .metric-label {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .metric-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .metric-tag {
+      margin-top: 0.15rem;
+      font-size: 0.65rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .hero-progress {
+      margin-top: 0.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .hero-progress-label {
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .hero-progress-bar {
+      position: relative;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+    }
+
+    .hero-progress-bar-inner {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, var(--accent), #e8ccff);
+      width: 76%;
+    }
+
+    .hero-orbit {
+      position: absolute;
+      width: 230px;
+      height: 230px;
+      border-radius: 999px;
+      border: 1px solid rgba(168, 115, 255, 0.4);
+      right: -70px;
+      top: 40%;
+      transform: translateY(-50%);
+      opacity: 0.28;
+    }
+
+    .hero-orbit-dot {
+      position: absolute;
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+      background: #d8b3ff;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 0 20px rgba(168, 115, 255, 0.9);
+    }
+
+    .hero-orbit-inner {
+      position: absolute;
+      width: 75px;
+      height: 75px;
+      border-radius: 999px;
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* Sections */
+    section {
+      padding: 3.8rem 0;
+    }
+
+    .section-header {
+      margin-bottom: 2.2rem;
+    }
+
+    .section-eyebrow {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .section-description {
+      margin-top: 0.4rem;
+      max-width: 40rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* Problema */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+
+    .pill-card {
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      padding: 1.4rem 1.6rem;
+    }
+
+    .pill-card-title {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .pill-card-main {
+      font-size: 1.05rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .pill-card-main span {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .list li {
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .list-bullet {
+      width: 6px;
+      height: 6px;
+      margin-top: 0.45rem;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .tag-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .tag {
+      padding: 0.2rem 0.7rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* Impactos */
+    .card-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.4rem;
+    }
+
+    .impact-card {
+      padding: 1.3rem 1.2rem 1.4rem;
+      border-radius: var(--radius-lg);
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .impact-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+
+    .impact-title {
+      font-size: 1.02rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .impact-text {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .impact-glow {
+      position: absolute;
+      inset: -30%;
+      background: radial-gradient(circle at top left, rgba(168, 115, 255, 0.22), transparent 60%);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    /* O que é a Cloudy.IA */
+    .pill-card-alt {
+      border-radius: var(--radius-lg);
+      background: radial-gradient(circle at top, rgba(168, 115, 255, 0.09), #050507 65%);
+      border: 1px solid rgba(168, 115, 255, 0.5);
+      padding: 1.6rem 1.7rem;
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.85);
+    }
+
+    .pill-card-alt h3 {
+      font-size: 1.15rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin-bottom: 0.5rem;
+      color: var(--accent);
+    }
+
+    .pill-card-alt p {
+      font-size: 0.96rem;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+
+    .pill-card-alt ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .pill-card-alt ul li span {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* Cloudy na prática */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 0.4rem;
+    }
+
+    .step-card {
+      padding: 1.1rem 1rem 1.3rem;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .step-number {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      border: 1px solid rgba(168, 115, 255, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .step-title {
+      font-size: 0.98rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .step-text {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    /* Caminho até a Cloudy.IA */
+    .timeline {
+      margin-top: 1.3rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.015);
+      padding: 1.4rem 1.5rem;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 120px minmax(0, 1fr);
+      gap: 1.2rem;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .timeline-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .timeline-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+    }
+
+    .timeline-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-top: 0.15rem;
+      padding: 0.18rem 0.6rem;
+      border-radius: var(--radius-pill);
+      background: rgba(168, 115, 255, 0.08);
+      border: 1px solid rgba(168, 115, 255, 0.3);
+      font-size: 0.7rem;
+      color: var(--accent);
+    }
+
+    .timeline-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.1rem;
+    }
+
+    .timeline-text {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    /* CTA final */
+    .cta {
+      padding: 3.2rem 0 3.6rem;
+    }
+
+    .cta-card {
+      border-radius: 30px;
+      background: radial-gradient(circle at top left, #4a2a7c 0, #050507 40%, #020203 100%);
+      border: 1px solid rgba(168, 115, 255, 0.6);
+      padding: 2.2rem 2rem 2.5rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95);
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .cta-title {
+      font-size: 1.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      margin-bottom: 0.5rem;
+    }
+
+    .cta-highlight {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+    }
+
+    .cta-text {
+      font-size: 0.95rem;
+      color: var(--muted);
+      max-width: 28rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .cta-quote {
+      font-size: 0.9rem;
+      font-style: italic;
+      color: #e8d4ff;
+      border-left: 3px solid rgba(168, 115, 255, 0.7);
+      padding-left: 0.8rem;
+      margin-top: 0.4rem;
+    }
+
+    .cta-right {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      align-items: flex-start;
+    }
+
+    .cta-pill {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+    }
+
+    .cta-ods {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .ods-tag {
+      padding: 0.35rem 0.9rem;
+      border-radius: var(--radius-pill);
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.8rem;
+    }
+
+    .cta-footer {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 0.6rem;
+    }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 1.4rem 0 1.7rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+
+    .footer span.highlight {
+      color: var(--accent);
+    }
+
+    /* Responsivo */
+    @media (max-width: 900px) {
+      .hero-grid,
+      .grid-2,
+      .cta-card {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .hero {
+        padding-top: 2.4rem;
+      }
+
+      .hero-card {
+        order: -1;
+      }
+
+      .card-grid-3,
+      .steps {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .navbar-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .nav-links {
+        font-size: 0.75rem;
+      }
+
+      .hero-title {
+        font-size: 2rem;
+      }
+
+      .cta-card {
+        padding: 1.8rem 1.4rem 2rem;
+      }
+
+      .timeline-item {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- NAVBAR -->
+    <header class="navbar">
+      <div class="container navbar-inner">
+        <div class="brand">
+          <div class="brand-mark">C</div>
+          <div class="brand-text">
+            <div class="brand-name">Cloudy.IA</div>
+            <div class="brand-tagline">Infraestrutura distribuída e sustentável</div>
+          </div>
+        </div>
+
+        <nav class="nav-links">
+          <a href="#problema">Problema</a>
+          <a href="#impactos">Impactos</a>
+          <a href="#cloudy">Cloudy.IA</a>
+          <a href="#pratica">Na prática</a>
+          <a href="#caminho">Caminho</a>
+          <a href="#cta" class="nav-cta">
+            <span class="icon">●</span>
+            Global Solution 2025
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <div class="hero-eyebrow">
+              <span>Global Solution 2025 • Network</span>
+            </div>
+            <h1 class="hero-title">
+              A nuvem precisa ser
+              <span class="highlight">distribuída, verde</span>
+              e democrática.
+            </h1>
+            <p class="hero-subtitle">
+              A <strong>Cloudy.IA</strong> redesenha a infraestrutura de nuvem com
+              micro datacenters, edge computing e energia renovável, reduzindo
+              dependência das big techs e alinhando tecnologia aos ODS.
+            </p>
+
+            <div class="hero-badges">
+              <div class="badge"><strong>Rede distribuída</strong> de micro datacenters</div>
+              <div class="badge">Foco em <strong>saúde, educação e governo</strong></div>
+              <div class="badge">Alinhada aos ODS <strong>7, 9, 10, 12 e 13</strong></div>
+            </div>
+
+            <div class="hero-actions">
+              <a href="#cloudy" class="btn-primary">
+                Conheça a Cloudy.IA
+                <span>↘</span>
+              </a>
+              <a href="#problema" class="btn-ghost">
+                Entenda o problema da nuvem atual
+              </a>
+            </div>
+
+            <div class="hero-footer-note">
+              Em 2050, a infraestrutura digital não pode ser apenas maior –
+              <span>precisa ser melhor.</span>
+            </div>
+          </div>
+
+          <!-- Hero visual card -->
+          <aside class="hero-card">
+            <div class="hero-chip-row">
+              <div class="hero-chip">Edge • 5G • IA</div>
+              <div class="hero-chip-right">
+                <div class="hero-chip-dot"></div>
+                Núcleo ativo • Cloudy.IA
+              </div>
+            </div>
+
+            <div class="hero-main-label">Visão 2050 › Infraestrutura de Nuvem</div>
+            <div class="hero-main-title">Rede de micro datacenters soberanos</div>
+            <div class="hero-main-sub">
+              Nuvem descentralizada rodando perto de onde os dados nascem,
+              com governança local e energia limpa.
+            </div>
+
+            <div class="hero-metrics">
+              <div class="metric">
+                <div class="metric-label">Redução potencial de latência</div>
+                <div class="metric-value">-40%</div>
+                <div class="metric-tag">Edge first</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Energia de fonte renovável</div>
+                <div class="metric-value">&gt; 80%</div>
+                <div class="metric-tag">ODS 7</div>
+              </div>
+              <div class="metric">
+                <div class="metric-label">Dados críticos processados localmente</div>
+                <div class="metric-value">+65%</div>
+                <div class="metric-tag">Soberania</div>
+              </div>
+            </div>
+
+            <div class="hero-progress">
+              <div class="hero-progress-label">Aderência a ODS (7, 9, 10, 12, 13)</div>
+              <div class="hero-progress-bar">
+                <div class="hero-progress-bar-inner"></div>
+              </div>
+            </div>
+
+            <div class="hero-orbit">
+              <div class="hero-orbit-dot"></div>
+              <div class="hero-orbit-inner"></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- PROBLEMA DA NUVEM HOJE -->
+      <section id="problema">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-eyebrow">O problema da nuvem hoje</div>
+            <h2 class="section-title">Infraestrutura concentrada, poder concentrado</h2>
+            <p class="section-description">
+              Hoje, a nuvem é dominada por poucas big techs globais. Isso cria
+              dependência, concentração de dados e grandes desafios econômicos,
+              sociais e ambientais.
+            </p>
+          </div>
+
+          <div class="grid-2">
+            <div class="pill-card">
+              <div class="pill-card-title">Modelo atual</div>
+              <div class="pill-card-main">
+                Nuvem <span>centralizada</span>, pouco transparente e pouco sustentável.
+              </div>
+
+              <ul class="list">
+                <li>
+                  <div class="list-bullet"></div>
+                  <div>
+                    <strong>Concentração de poder:</strong> dados, infraestrutura e
+                    decisões nas mãos de poucas empresas.
+                  </div>
+                </li>
+                <li>
+                  <div class="list-bullet"></div>
+                  <div>
+                    <strong>Lock-in tecnológico:</strong> caro e difícil mudar de provedor,
+                    criando dependência para empresas e governos.
+                  </div>
+                </li>
+                <li>
+                  <div class="list-bullet"></div>
+                  <div>
+                    <strong>Riscos de falhas centralizadas:</strong> incidentes em datacenters
+                    gigantes podem afetar milhões de pessoas ao mesmo tempo.
+                  </div>
+                </li>
+              </ul>
+
+              <div class="tag-grid">
+                <div class="tag">Alta concentração geográfica</div>
+                <div class="tag">Pouca soberania digital</div>
+                <div class="tag">Infraestrutura cara e rígida</div>
+              </div>
+            </div>
+
+            <div class="pill-card">
+              <div class="pill-card-title">Impactos diretos</div>
+              <ul class="list">
+                <li>
+                  <div class="list-bullet"></div>
+                  <div>
+                    <strong>Sociais e econômicos:</strong> desigualdades digitais e perda de
+                    soberania de países e regiões.
+                  </div>
+                </li>
+                <li>
+                  <div class="list-bullet"></div>
+                  <div>
+                    <strong>Tecnológicos:</strong> pouca diversidade de modelos de nuvem e
+                    risco de monopólios de infraestrutura.
+                  </div>
+                </li>
+                <li>
+                  <div class="list-bullet"></div>
+                  <div>
+                    <strong>Ambientais:</strong> alto consumo de energia e água, emissões de
+                    CO₂ e desalinhamento com ODS 7, 12 e 13.
+                  </div>
+                </li>
+              </ul>
+
+              <div class="tag-grid">
+                <div class="tag">ODS 7 • Energia limpa</div>
+                <div class="tag">ODS 12 • Consumo responsável</div>
+                <div class="tag">ODS 13 • Ação climática</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- IMPACTOS -->
+      <section id="impactos">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-eyebrow">Impactos sociais, econômicos e ambientais</div>
+            <h2 class="section-title">Por que o modelo atual não fecha a conta</h2>
+          </div>
+
+          <div class="card-grid-3">
+            <article class="impact-card">
+              <div class="impact-glow"></div>
+              <div class="impact-label">Social & Econômico</div>
+              <div class="impact-title">Desigualdades e dependência</div>
+              <p class="impact-text">
+                Países, governos e organizações ficam dependentes de poucos provedores
+                globais, reforçando desigualdades digitais e reduzindo a autonomia
+                sobre dados estratégicos.
+              </p>
+            </article>
+
+            <article class="impact-card">
+              <div class="impact-glow"></div>
+              <div class="impact-label">Tecnológico</div>
+              <div class="impact-title">Riscos de centralização</div>
+              <p class="impact-text">
+                Falhas em grandes datacenters afetam milhões de usuários ao mesmo
+                tempo, e a baixa diversidade de modelos de nuvem limita inovação e
+                resiliência.
+              </p>
+            </article>
+
+            <article class="impact-card">
+              <div class="impact-glow"></div>
+              <div class="impact-label">Ambiental</div>
+              <div class="impact-title">Energia cara e pouco sustentável</div>
+              <p class="impact-text">
+                Datacenters gigantes consomem muita energia e água, elevam emissões
+                e caminham na contramão de uma infraestrutura digital realmente
+                verde e transparente.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- O QUE É A CLOUDY.IA -->
+      <section id="cloudy">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-eyebrow">O que é a Cloudy.IA</div>
+            <h2 class="section-title">Nuvem distribuída, sustentável e democrática</h2>
+            <p class="section-description">
+              A Cloudy.IA é uma visão de infraestrutura de nuvem que nasce distribuída:
+              micro datacenters próximos dos usuários, governança compartilhada e
+              energia renovável como padrão, não como opcional.
+            </p>
+          </div>
+
+          <div class="grid-2">
+            <div class="pill-card-alt">
+              <h3>Arquitetura Cloudy.IA</h3>
+              <p>
+                A Cloudy.IA conecta <strong>micro datacenters</strong> e
+                <strong>edge computing</strong> em escolas, hospitais, órgãos públicos
+                e espaços comunitários, formando uma rede resiliente e
+                territorializada de nuvem.
+              </p>
+              <ul>
+                <li><span>Rede de micro datacenters</span> conectados por 5G e fibra óptica.</li>
+                <li><span>Edge computing</span> para processar dados o mais perto possível
+                  de onde nascem.</li>
+                <li><span>Governança compartilhada</span> com nuvens soberanas regionais.</li>
+                <li><span>Energia renovável</span> e datacenters projetados para eficiência
+                  energética.</li>
+              </ul>
+            </div>
+
+            <div class="pill-card">
+              <div class="pill-card-title">Como chegamos até a Cloudy.IA</div>
+              <ul class="list">
+                <li>
+                  <div class="list-bullet"></div>
+                  <div>
+                    <strong>Tecnologia:</strong> uso combinado de edge, 5G, IA para
+                    eficiência energética e padrões abertos de interoperabilidade.
+                  </div>
+                </li>
+                <li>
+                  <div class="list-bullet"></div>
+                  <div>
+                    <strong>Políticas públicas:</strong> incentivo a datacenters verdes,
+                    nuvens soberanas e infraestrutura distribuída.
+                  </div>
+                </li>
+                <li>
+                  <div class="list-bullet"></div>
+                  <div>
+                    <strong>Educação:</strong> formação de profissionais em cloud
+                    sustentável e governança de dados.
+                  </div>
+                </li>
+              </ul>
+
+              <div class="tag-grid">
+                <div class="tag">ODS 9 • Inovação e infraestrutura</div>
+                <div class="tag">ODS 10 • Redução das desigualdades</div>
+                <div class="tag">ODS 12 • Produção responsável</div>
+                <div class="tag">ODS 13 • Clima</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CLOUDY NA PRÁTICA -->
+      <section id="pratica">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-eyebrow">Cloudy.IA na prática</div>
+            <h2 class="section-title">Da visão ao deployment distribuído</h2>
+            <p class="section-description">
+              Como essa infraestrutura se materializa no dia a dia? A Cloudy.IA se
+              traduz em casos de uso concretos que conectam serviços críticos,
+              energia limpa e soberania de dados.
+            </p>
+          </div>
+
+          <div class="steps">
+            <article class="step-card">
+              <div class="step-number">1</div>
+              <div class="step-title">Micro datacenters em espaços públicos</div>
+              <p class="step-text">
+                Instalação de micro datacenters em escolas, hospitais e órgãos
+                públicos, aproximando a nuvem de quem mais precisa de serviços
+                estáveis e de baixa latência.
+              </p>
+            </article>
+
+            <article class="step-card">
+              <div class="step-number">2</div>
+              <div class="step-title">Processamento local de dados sensíveis</div>
+              <p class="step-text">
+                Dados de saúde, educação e governo são processados localmente,
+                respeitando regulamentações e reforçando a soberania digital das
+                regiões.
+              </p>
+            </article>
+
+            <article class="step-card">
+              <div class="step-number">3</div>
+              <div class="step-title">Nuvem alimentada por energia renovável</div>
+              <p class="step-text">
+                Cada ponto da rede é desenhado para operar com energia renovável
+                regional, reduzindo emissões e aproximando infraestrutura digital
+                dos ODS ambientais.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- CAMINHO ATÉ A CLOUDY.IA -->
+      <section id="caminho">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-eyebrow">Da nuvem concentrada à Cloudy.IA</div>
+            <h2 class="section-title">2050: oportunidade de redesenhar a infraestrutura digital</h2>
+            <p class="section-description">
+              Em vez de apenas escalar datacenters gigantes, a Cloudy.IA propõe um
+              novo desenho de rede: distribuída, transparente, alinhada à educação,
+              à inclusão e ao clima.
+            </p>
+          </div>
+
+          <div class="timeline">
+            <div class="timeline-item">
+              <div>
+                <div class="timeline-label">Hoje</div>
+                <div class="timeline-chip">Nuvem concentrada</div>
+              </div>
+              <div>
+                <div class="timeline-title">Centralização extrema</div>
+                <div class="timeline-text">
+                  Poucas empresas controlam grandes datacenters globais. Custo
+                  elevado de mudança, riscos de falhas em cascata e pouca
+                  participação de governos locais e comunidades na governança.
+                </div>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <div>
+                <div class="timeline-label">Transição</div>
+                <div class="timeline-chip">Redes híbridas</div>
+              </div>
+              <div>
+                <div class="timeline-title">Edge + Nuvens regionais</div>
+                <div class="timeline-text">
+                  Combinação de provedores globais com redes locais, políticas
+                  públicas para datacenters verdes e pilotos de micro datacenters
+                  públicos próximos a serviços essenciais.
+                </div>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <div>
+                <div class="timeline-label">Visão 2050</div>
+                <div class="timeline-chip">Cloudy.IA</div>
+              </div>
+              <div>
+                <div class="timeline-title">Nuvem distribuída, sustentável e democrática</div>
+                <div class="timeline-text">
+                  Uma malha de micro datacenters soberanos, conectados por edge e
+                  5G, rodando com energia renovável e governança compartilhada
+                  entre comunidades, governos e organizações – a nuvem como
+                  infraestrutura pública essencial.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA FINAL -->
+      <section class="cta" id="cta">
+        <div class="container">
+          <div class="cta-card">
+            <div>
+              <div class="cta-title">Cloudy.IA • Global Solution 2025</div>
+              <div class="cta-highlight">
+                O futuro da nuvem não é só escalar servidores – é escalar impacto.
+              </div>
+              <p class="cta-text">
+                A proposta da Cloudy.IA conecta infraestrutura de rede, energia
+                renovável e inclusão digital para que o futuro do trabalho e da
+                computação em nuvem seja, ao mesmo tempo, eficiente, justo e
+                sustentável.
+              </p>
+              <a href="#cloudy" class="btn-primary">
+                Revisitar a solução
+                <span>↑</span>
+              </a>
+
+              <p class="cta-quote">
+                “A nuvem do futuro não pode ser só maior – precisa ser melhor.”
+              </p>
+            </div>
+
+            <div class="cta-right">
+              <div class="cta-pill">Conexão com os ODS</div>
+              <div class="cta-ods">
+                <div class="ods-tag">ODS 4 – Educação de qualidade</div>
+                <div class="ods-tag">ODS 7 – Energia limpa</div>
+                <div class="ods-tag">ODS 8 – Trabalho decente</div>
+                <div class="ods-tag">ODS 9 – Inovação e infraestrutura</div>
+                <div class="ods-tag">ODS 10 – Redução das desigualdades</div>
+                <div class="ods-tag">ODS 12 – Consumo responsável</div>
+                <div class="ods-tag">ODS 13 – Ação climática</div>
+              </div>
+
+              <div class="cta-footer">
+                Este site resume o trabalho de Network e a visão da Cloudy.IA como
+                uma infraestrutura de nuvem distribuída, sustentável e democrática
+                para 2050.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div>Cloudy.IA • Infraestrutura de nuvem distribuída</div>
+        <div>
+          Global Solution FIAP 2025 – <span class="highlight">O Futuro do Trabalho e da Computação em Nuvem</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
